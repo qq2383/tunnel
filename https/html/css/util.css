@@ -1,0 +1,196 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+button:hover {
+    /* box-shadow: 0 0 3px 1px #aaa; */
+    opacity: 0.6;
+}
+
+.toolbar {
+    background: #3f3f3f;
+    color: #fff;
+    padding: 0 16px;
+    line-height: 46px;
+}
+
+.toolbar-title {
+    font-weight: bold;
+}
+
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.container-menu {
+    min-width: 120px;
+    background: #eee;
+}
+
+.container-menu ul {
+    list-style-type: none;
+    padding: 12px 0 0;
+}
+
+.container-menu a {
+    display: block;
+    padding: 6px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #000;
+    text-decoration: none;
+    border-bottom: 1px solid #eee;
+}
+
+.container-menu a:hover {
+    background: #fefefe;
+    border-bottom: 1px solid #ccc;
+}
+
+.container-menu a.selected {
+    background: #008000;
+    color: #fff;
+}
+
+.container-content {
+    flex: 1;
+    overflow: auto;
+}
+
+.hide {
+    display: none;
+}
+
+.panel {
+    text-align: center;
+    position: relative;
+    margin-top: 32px;
+}
+
+.panel-content {
+    display: inline-block;
+    position: relative;
+}
+
+.row {
+    padding: 8px 12px;
+}
+
+.row label {
+    text-align: right;
+    width: 100%;
+    display: inline-block;
+}
+
+.row input[type='text'],
+.row input[type='password'] {
+    width: 180px;
+    display: inline-block;
+    border: 1px solid #adadad;
+    padding: 2px;
+    font-size: 1rem;
+    margin-left: 4px;
+}
+
+.row.title {
+    background: #f7f7f7;
+    padding: 0;
+    box-shadow: inset 0px 0px 0px 1px #3f3f3f;
+}
+
+.row .title {
+    background: #3f3f3f;
+    color: #fff;
+    border-top: 1px solid #ccc;
+    margin-bottom: 6px;
+    padding: 8px;
+}
+
+button.close {
+    color: #fff;
+    font-size: 1.4rem;
+    margin: 3px 16px 6px;
+}
+
+button.submit {
+    background: #008000;
+    padding: 6px 8px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+button.play {
+    background: #d6d6d6;
+    padding: 4px 6px;
+    font-size: 0.9rem;
+}
+
+button.green {
+    background: #008000;
+    color: #fff;
+}
+
+button.red {
+    background: #ff0000;
+    color: #fff;
+}
+
+#user ul {
+    list-style-type: none;
+}
+
+#user ul li {
+    padding: 12px 24px;
+}
+
+#user ul li label {
+    margin: 0 8px;
+    width: 260px;
+    display: inline-block;
+}
+
+#user ul li input[type="text"] {
+    margin: 0 8px;
+    width: 120px;
+    display: inline-block;
+}
+
+#user ul li span {    
+    width: 60px;
+    display: inline-block;
+    /* text-align: right; */
+}
+
+input[type="text"] {
+    border: 1px solid #ccc;
+    display: inline-block;
+    width: 200px;
+    font-size: 1rem;
+    padding: 2px;
+}
+
+#user li button {
+    font-size: 1.2rem;
+    vertical-align: middle;
+}

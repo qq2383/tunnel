@@ -1,0 +1,11 @@
+local:
+    port: 10080
+
+remote:
+    addr: 127.0.0.1
+    port: 10088
+
+user:
+    -
+        name: aws1
+        passwd: Aws_tun@neld1l

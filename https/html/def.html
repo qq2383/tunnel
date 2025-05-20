@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Tunnel Manage</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/bi.css">
+	<link rel="stylesheet" href="css/util.css">
+	<link rel="stylesheet" href="css/qcjs.css">
+
+	<script src="js/qcjs-core.min.js"></script>
+	<script src="js/qcjs-util.min.js"></script>
+	<script src="js/icon.js"></script>
+
+	<style>
+
+	</style>
+</head>
+
+<body>
+	<div class="toolbar">
+		<span class="toolbar-title">
+			Login
+		</span>
+	</div>
+	<div class="container">
+		<div class="container-content">
+			<div class="panel">
+				<div class="panel-content">
+					<div class="row">
+						<label>
+							Password:
+							<input type="password" qc-type="change" qc-fn="submit">
+						</label>
+					</div>
+					<div class="row">
+						<button class="submit" qc-fn="submit">submit</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function submit(re) {
+			var pwd = qc("input").val();
+			qc.util.post("/login", { "pwd": pwd }, function (d) {
+				if (d.Rows == 0) {
+					qc.popfrm.dyShow("", [], "Password error", null, null, function(pop) {
+						qc("input").focus();
+					});
+					return;
+				}
+				location = "/mng";
+			});
+		}
+
+		qc(function () {
+
+		});
+
+		qc.util.addInited(function () {
+			qc("input").focus();
+		});
+	</script>
+</body>
+
+</html>

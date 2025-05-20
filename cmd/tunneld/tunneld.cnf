@@ -1,0 +1,6 @@
+server:
+    port: 10088
+    cert_path: ../../../cert
+http:
+    port: 10089
+    passwd: "123456"

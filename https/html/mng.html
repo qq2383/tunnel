@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Tunnel Manage</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/bi.css">
+	<link rel="stylesheet" href="css/util.css">
+	<link rel="stylesheet" href="css/qcjs.css">
+
+	<script src="js/qcjs-core.min.js"></script>
+	<script src="js/qcjs-util.min.js"></script>
+	<script src="js/icon.js"></script>
+
+	<style>
+
+	</style>
+</head>
+
+<body>
+	<div class="toolbar">
+		<span class="toolbar-title">
+			Tunnel Manager
+		</span>
+	</div>
+	<div class="container">
+		<div class="container-menu">
+			<ul>
+				<li>
+					<a href="javascript:void(0);" qc-value="https" qc-fn="menu">
+						<i class="bi bi-server" title="Root passwd"></i> Http Server
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);" qc-value="tunnel" qc-fn="menu">
+						<i class="bi bi-reply" title="Root passwd"></i> Tunnel Server
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);" qc-value="passwd" qc-fn="menu">
+						<i class="bi bi-key" title="Root passwd"></i> Root password
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0);" qc-value="user" qc-fn="menu">
+						<i class="bi bi-person" title="User Manage"></i> User
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="container-content">
+			<div class="panel hide" id="https">
+				<div class="panel-content">
+					<div class="row">
+						<label>
+							Http Server port:
+							<input type="text" qc-field="hport">
+						</label>
+					</div>
+					<div class="row">
+						<button class="submit" qc-fn="submit">submit</button>
+						&nbsp;
+						<button class="play bi bi-play" qc-fn="play" title="hstart"></button>
+						<button class="play bi bi-stop" qc-fn="play" title="hstop"></button>
+						<button class="play bi bi-arrow-clockwise" qc-fn="play" title="hrestart"></button>
+					</div>
+				</div>
+			</div>
+			<div class="panel hide" id="tunnel">
+				<div class="panel-content">
+					<div class="row">
+						<label>
+							Tunnel Server port:
+							<input type="text" qc-field="tport">
+						</label>
+					</div>
+					<div class="row">
+						<button class="submit" qc-fn="submit">submit</button>
+						&nbsp;
+						<button class="play bi bi-play" qc-fn="play" title="tstart"></button>
+						<button class="play bi bi-stop" qc-fn="play" title="tstop"></button>
+						<button class="play bi bi-arrow-clockwise" qc-fn="play" title="trestart"></button>
+					</div>
+				</div>
+			</div>
+			<div class="panel hide" id="passwd">
+				<div class="panel-content">
+					<div class="row">
+						<label>
+							New passwd:
+							<input type="password" qc-field="npwd">
+						</label>
+					</div>
+					<div class="row">
+						<label>
+							Confirm passwd:
+							<input type="password" qc-field="cpwd">
+						</label>
+					</div>
+					<div class="row">
+						<button class="submit" qc-fn="submit">Submit</button>
+					</div>
+				</div>
+			</div>
+			<div class="panel" id="user">
+				<div class="panel-content">
+					<ul>
+						<li addnew>
+							<label>
+								User name:
+								<input type="text" class="user">
+							</label>
+							<label>
+								Password:
+								<input type="text" class="passwd">
+							</label>
+							<span class="btn">
+								<button class="rm bi bi-check" title="submit" qc-fn="userp" qc-value="s"></button>
+								<button class="rm bi bi-x hide" title="remove user" qc-fn="userp" qc-value="r"></button>
+							</span>
+						</li>
+					</ul>
+				</div>
+				<!-- <div style="padding: 12px; text-align: center;">
+					<button class="bi bi-person-add" style="font-size: 1.2rem;" title="Add user"></button>
+				</div> -->
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function win_close() {
+			this.focus();
+			self.opener = self;
+			window.close();
+		}
+
+		function menu(re) {
+			var ul = re.curr.closest("ul");
+			var as = ul.find("a");
+			as.filter(".selected").each(function () {
+				qc(this).removeClass("selected");
+			});
+			re.curr.addClass("selected");
+			showPanel(re.curr.attr("qc-value"))
+		}
+
+		function showPanel(v) {
+			if (!v)
+				return;
+
+			qc(".panel").hide();
+			var panel = qc("#" + v).show();
+			if (["tunnel", "https", "user"].contains(v)) {
+				getData(v, panel);
+			}
+		}
+
+		function getData(v, panel) {
+			qc.util.post("/get/" + v, {}, function (d) {
+				if (d.Rows == 0) {
+					return;
+				}
+				if (v == "user") {
+					fillUser(d);
+					return;
+				}
+				var b = d.Data[0];
+				panel.find("input").each(function () {
+					var inp = qc(this),
+						field = inp.attr("qc-field");
+					inp.val(b[field])
+				});
+				if (panel[0]) {
+					panel.focus();
+				}
+			});
+		}
+
+		function fillUser(d) {
+			var ul = qc("#user ul");
+			ul.find("li:not([addnew]").remove();
+			var addnew = ul.find("li[addnew]");
+			addnew.find("input").val("");
+			for (var i = 0; i < d.Rows; i++) {
+				var b = d.Data[i];
+				var clone = addnew.clone();
+				ul.append(clone);
+
+				clone[0].b = b;
+				clone.removeAttr("addnew");
+				clone.find(".user").val(b.Name);
+				clone.find(".passwd").val(b.Passwd);
+				clone.find("button[qc-value='r']").show();
+			}
+		}
+
+		var err = ["password is not empty.", "The new password does not match the confirmation password.", "modify password error."];
+		var msg = ["The modification was successful.", "The modification failed."];
+
+		function submit(re) {
+			var panel = re.curr.closest(".panel");
+			var id = panel.attr("id");
+			if (id) {
+				var args = {};
+				panel.find("input").each(function () {
+					var inp = qc(this),
+						field = inp.attr("qc-field"),
+						value = inp.val();
+					args[field] = value;
+				});
+				if (id == "passwd") {
+					if (!args["npwd"] || !args["cpwd"]) {
+						qc.popfrm.dyShow("", [], err[0]);
+						return;
+					} else if (args["npwd"] != args["cpwd"]) {
+						qc.popfrm.dyShow("", [], err[1]);
+						return;
+					}
+				}
+				qc.util.post("/post/" + id, args, function (d) {
+					var content = msg[0];
+					if (id == "passwd") {
+						if (d.Rows == 1) {
+							content = err[0];
+						} else if (d.Rows == 2) {
+							content = err[1];
+						} else if (d.Rows == 3) {
+							content = err[2]
+						}
+						panel.find("input").val("");
+					} else if (d.Rows == 0) {
+						content = msg[1];
+					}
+					qc.popfrm.dyShow("", [], content);
+				});
+			}
+		}
+
+		function play(re) {
+			var title = re.curr.attr("title");
+			qc.util.post("/post/play", { "type": title }, function (d) {
+
+			});
+		}
+
+		function userp(re) {
+			var li = re.curr.closest("li");
+			var b = li[0].b;
+			var args = {
+				"t": re.curr.attr("qc-value")
+			};
+			args["o"] = b.Name
+			args["u"] = li.find(".user").val();
+			if (args.t == "s") {
+				args["p"] = li.find(".passwd").val();
+			}
+			qc.util.post("/post/user", args, function (d) {
+				fillUser(d);
+			});
+		}
+
+		qc(function () {
+			qc(".container-menu a").click();
+			setInterval(getStatus, 1000);
+		});
+
+		function getStatus() {
+			qc.util.post("/post/play", { "type": "astat" }, function (d) {
+				if (d.Rows != 0) {
+					var b = d.Data[0];
+					if (b["tunnel"] == 0x01) {
+						qc("button[title='tstart']").addClass("green");
+						qc("button[title='tstop']").removeClass("red");
+					} else {
+						qc("button[title='tstart']").removeClass("green");
+						qc("button[title='tstop']").addClass("red");
+					}
+					if (b["https"] == 0x01) {
+						qc("button[title='hstart']").addClass("green");
+						qc("button[title='hstop']").removeClass("red");
+					} else {
+						qc("button[title='hstart']").removeClass("green");
+						qc("button[title='hstop']").addClass("red");
+					}
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>
