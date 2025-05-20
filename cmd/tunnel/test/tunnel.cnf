@@ -7,5 +7,5 @@ remote:
 
 user:
     -
-        name: aws1
-        passwd: Aws_tun@neld1l
+        name: user
+        passwd: 123456
